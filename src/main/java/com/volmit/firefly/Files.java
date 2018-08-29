@@ -14,6 +14,11 @@ public class Files
 		return new File(".").getAbsolutePath();
 	}
 
+	public boolean has(String path)
+	{
+		return new File(path).exists();
+	}
+
 	public void mkdirs(String path)
 	{
 		new File(path).mkdirs();

@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
@@ -21,6 +22,60 @@ public class Fly
 	public void log(String l)
 	{
 		System.out.println(l);
+	}
+
+	public ArrayList<String> newStringList()
+	{
+		return new ArrayList<String>();
+	}
+
+	public Process runProcess(ArrayList<String> args, String name)
+	{
+		try
+		{
+			Process p = buildProcess(args).start();
+			monitorProcess(p, name);
+			return p;
+		}
+
+		catch(Exception e)
+		{
+
+		}
+
+		return null;
+	}
+
+	public Process monitorProcess(Process ps, String name)
+	{
+		new StreamGobbler(ps.getInputStream(), name).start();
+		new StreamGobbler(ps.getErrorStream(), "ERROR: " + name).start();
+		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				System.out.println("DESTROYING CHILD PROCESS");
+				ps.destroy();
+
+				try
+				{
+					ps.waitFor();
+				}
+
+				catch(InterruptedException e)
+				{
+					e.printStackTrace();
+				}
+			}
+		}));
+		return ps;
+	}
+
+	public ProcessBuilder buildProcess(ArrayList<String> args)
+	{
+		ProcessBuilder pb = new ProcessBuilder(args);
+		return pb;
 	}
 
 	public Thread executeThread(String script)
