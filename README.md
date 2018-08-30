@@ -45,3 +45,9 @@ FS.touch("create a file");
 FS.writefile("filename", "string to write"); // does not append
 FS.writefile("filename", "string to write", bool); //append bool
 ```
+
+### Uses Install4j
+multi-platform installer builder
+https://www.ej-technologies.com/products/install4j/overview.html
+
+![](https://www.ej-technologies.com/images/product_banners/install4j_large.png)
