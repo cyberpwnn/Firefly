@@ -3,7 +3,9 @@ package com.volmit.firefly;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 
 import javax.script.ScriptEngine;
@@ -17,6 +19,58 @@ public class Fly
 	public Fly(String[] parameters)
 	{
 		this.parameters = parameters;
+	}
+
+	public String getParameter(int index)
+	{
+		return parameters[index];
+	}
+
+	public void changeVersion(String var, String javaFile)
+	{
+		try
+		{
+			String c = "";
+			BufferedReader bu = new BufferedReader(new FileReader(new File(javaFile)));
+			String l = "";
+
+			while((l = bu.readLine()) != null)
+			{
+				String v = l + "\n";
+
+				if(v.trim().contains("public static final String " + var))
+				{
+					String cv = v.split("\\Q\"\\E")[1];
+					int d = cv.contains(".") ? cv.split("\\.").length : 0;
+					System.out.println("Found " + d + " dots.");
+					if(d > 0)
+					{
+						Integer cver = Integer.valueOf(cv.split("\\.")[d - 1]) + 1;
+						v = "	public static final String " + var + " = \"";
+
+						for(int i = 0; i < cv.split("\\.").length - 1; i++)
+						{
+							System.out.println(cv.split("\\.")[i]);
+							v += cv.split("\\.")[i] + ".";
+						}
+
+						v += cver + "\";\n";
+					}
+				}
+
+				c += v;
+			}
+
+			bu.close();
+			PrintWriter pw = new PrintWriter(new FileWriter(new File(javaFile)));
+			pw.println(c);
+			pw.close();
+		}
+
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	public void log(String l)

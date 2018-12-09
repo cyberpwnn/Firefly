@@ -2,6 +2,8 @@ package com.volmit.firefly;
 
 import java.io.File;
 
+import com.volmit.volume.lang.collections.GList;
+
 public class Firefly
 {
 	public static void main(String[] a)
@@ -18,7 +20,7 @@ public class Firefly
 		{
 			try
 			{
-				Fly f = new Fly(new String[0]);
+				Fly f = new Fly(new GList<String>(a).qdel(a[0]).toArray(new String[a.length - 1]));
 				f.execute(script.getAbsolutePath());
 			}
 
