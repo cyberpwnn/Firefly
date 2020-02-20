@@ -2,7 +2,7 @@ package com.volmit.firefly;
 
 import java.io.File;
 
-import com.volmit.volume.lang.collections.GList;
+import ninja.bytecode.shuriken.collections.KList;
 
 public class Firefly
 {
@@ -20,7 +20,7 @@ public class Firefly
 		{
 			try
 			{
-				Fly f = new Fly(new GList<String>(a).qdel(a[0]).toArray(new String[a.length - 1]));
+				Fly f = new Fly(new KList<String>(a).qdel(a[0]).toArray(new String[a.length - 1]));
 				f.execute(script.getAbsolutePath());
 			}
 

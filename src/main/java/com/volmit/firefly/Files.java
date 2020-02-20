@@ -1,19 +1,14 @@
 package com.volmit.firefly;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 
 import org.apache.commons.io.FileUtils;
 import org.zeroturnaround.zip.ZipUtil;
 
-import com.jcraft.jsch.Channel;
-import com.jcraft.jsch.ChannelSftp;
-import com.jcraft.jsch.JSch;
-import com.jcraft.jsch.Session;
+import ninja.bytecode.shuriken.io.IO;
 
 public class Files
 {
@@ -31,133 +26,6 @@ public class Files
 	{
 		System.out.println("Archiving " + new File(folder).getPath());
 		ZipUtil.pack(new File(folder), new File(destination), level);
-	}
-
-	public void send(String host, int port, String username, String password, String dir, ArrayList<String> put, String key, String pass)
-	{
-		String SFTPHOST = host;
-		int SFTPPORT = port;
-		String SFTPUSER = username;
-		String SFTPPASS = password;
-		String SFTPWORKINGDIR = dir;
-		Session session = null;
-		Channel channel = null;
-		ChannelSftp channelSftp = null;
-		System.out.println("Prepare the host information for sftp.");
-		try
-		{
-			JSch jsch = new JSch();
-			jsch.addIdentity(key, pass);
-			session = jsch.getSession(SFTPUSER, SFTPHOST, SFTPPORT);
-			session.setPassword(SFTPPASS);
-			java.util.Properties config = new java.util.Properties();
-			config.put("StrictHostKeyChecking", "no");
-			session.setConfig(config);
-			session.connect();
-			System.out.println("Host connected.");
-			channel = session.openChannel("sftp");
-			channel.connect();
-			System.out.println("sftp channel opened and connected.");
-			channelSftp = (ChannelSftp) channel;
-			channelSftp.cd(SFTPWORKINGDIR);
-			for(String i : put)
-			{
-				File f = new File(i);
-
-				if(f.exists() && f.isFile())
-				{
-					System.out.println("Uploading " + f.getName());
-					channelSftp.put(new FileInputStream(f), f.getName());
-					System.out.println("Uploaded " + f.getName());
-				}
-
-				if(i.startsWith("dir:::"))
-				{
-					System.out.println("Make Directory: " + i.split(":::")[1]);
-					channelSftp.mkdir(i.split(":::")[1]);
-					System.out.println("Made Directory: " + i.split(":::")[1]);
-				}
-			}
-		}
-
-		catch(Exception ex)
-		{
-			System.out.println("Exception found while tranfer the response.");
-			ex.printStackTrace();
-		}
-
-		finally
-		{
-			channelSftp.exit();
-			System.out.println("sftp Channel exited.");
-			channel.disconnect();
-			System.out.println("Channel disconnected.");
-			session.disconnect();
-			System.out.println("Host Session disconnected.");
-		}
-	}
-
-	public void send(String host, int port, String username, String password, String dir, ArrayList<String> put)
-	{
-		String SFTPHOST = host;
-		int SFTPPORT = port;
-		String SFTPUSER = username;
-		String SFTPPASS = password;
-		String SFTPWORKINGDIR = dir;
-		Session session = null;
-		Channel channel = null;
-		ChannelSftp channelSftp = null;
-		System.out.println("Prepare the host information for sftp.");
-		try
-		{
-			JSch jsch = new JSch();
-			session = jsch.getSession(SFTPUSER, SFTPHOST, SFTPPORT);
-			session.setPassword(SFTPPASS);
-			java.util.Properties config = new java.util.Properties();
-			config.put("StrictHostKeyChecking", "no");
-			session.setConfig(config);
-			session.connect();
-			System.out.println("Host connected.");
-			channel = session.openChannel("sftp");
-			channel.connect();
-			System.out.println("sftp channel opened and connected.");
-			channelSftp = (ChannelSftp) channel;
-			channelSftp.cd(SFTPWORKINGDIR);
-			for(String i : put)
-			{
-				File f = new File(i);
-
-				if(f.exists() && f.isFile())
-				{
-					System.out.println("Uploading " + f.getName());
-					channelSftp.put(new FileInputStream(f), f.getName());
-					System.out.println("Uploaded " + f.getName());
-				}
-
-				if(i.startsWith("dir:::"))
-				{
-					System.out.println("Make Directory: " + i.split(":::")[1]);
-					channelSftp.mkdir(i.split(":::")[1]);
-					System.out.println("Made Directory: " + i.split(":::")[1]);
-				}
-			}
-		}
-
-		catch(Exception ex)
-		{
-			System.out.println("Exception found while tranfer the response.");
-			ex.printStackTrace();
-		}
-
-		finally
-		{
-			channelSftp.exit();
-			System.out.println("sftp Channel exited.");
-			channel.disconnect();
-			System.out.println("Channel disconnected.");
-			session.disconnect();
-			System.out.println("Host Session disconnected.");
-		}
 	}
 
 	public boolean has(String path)
@@ -194,6 +62,21 @@ public class Files
 		catch(Exception e)
 		{
 
+		}
+	}
+
+	public void rewrite(String file, String find, String replace)
+	{
+		try
+		{
+			String f = IO.readAll(new File(file));
+			IO.writeAll(new File(file), f.replaceAll("\\Q" + find + "\\E", replace));
+			System.out.println("Rewriting " + file + " '" + find + "' -> '" + replace + "'");
+		}
+
+		catch(IOException e)
+		{
+			e.printStackTrace();
 		}
 	}
 

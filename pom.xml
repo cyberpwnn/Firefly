@@ -40,8 +40,8 @@
 	</build>
 	<repositories>
 		<repository>
-			<id>volmit</id>
-			<url>http://nexus.volmit.com/content/repositories/volmit</url>
+			<id>bcn</id>
+			<url>http://bytecode.ninja/repository/bcn/</url>
 		</repository>
 	</repositories>
 	<dependencies>
@@ -51,44 +51,19 @@
 			<version>2.6</version>
 		</dependency>
 		<dependency>
-			<groupId>com.jsch</groupId>
-			<artifactId>jsch</artifactId>
-			<version>1.0</version>
-		</dependency>
-		<dependency>
 			<groupId>org.zeroturnaround</groupId>
 			<artifactId>zt-zip</artifactId>
 			<version>1.13</version>
 		</dependency>
-				<dependency>
+		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
 			<version>2.6</version>
 		</dependency>
 		<dependency>
-			<groupId>com.volmit</groupId>
-			<artifactId>VolumeLang</artifactId>
-			<version>1.1</version>
-		</dependency>
-		<dependency>
-			<groupId>com.volmit</groupId>
-			<artifactId>VolumeMath</artifactId>
-			<version>1.1</version>
-		</dependency>
-		<dependency>
-			<groupId>com.volmit</groupId>
-			<artifactId>VolumeCluster</artifactId>
-			<version>1.1</version>
-		</dependency>
-		<dependency>
-			<groupId>com.volmit</groupId>
-			<artifactId>VolumeNet</artifactId>
-			<version>1.1</version>
-		</dependency>
-		<dependency>
-			<groupId>com.volmit</groupId>
-			<artifactId>VolumeReflect</artifactId>
-			<version>1.1</version>
+			<groupId>ninja.bytecode</groupId>
+			<artifactId>Shuriken</artifactId>
+			<version>1.1.12</version>
 		</dependency>
 	</dependencies>
 </project>
