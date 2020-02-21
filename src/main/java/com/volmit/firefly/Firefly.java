@@ -2,8 +2,6 @@ package com.volmit.firefly;
 
 import java.io.File;
 
-import ninja.bytecode.shuriken.collections.KList;
-
 public class Firefly
 {
 	public static void main(String[] a)

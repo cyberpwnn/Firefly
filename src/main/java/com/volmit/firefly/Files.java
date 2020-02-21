@@ -8,13 +8,35 @@ import java.io.PrintWriter;
 import org.apache.commons.io.FileUtils;
 import org.zeroturnaround.zip.ZipUtil;
 
-import ninja.bytecode.shuriken.io.IO;
-
 public class Files
 {
 	public String path()
 	{
 		return new File(".").getAbsolutePath();
+	}
+	
+	public String readProperty(String path, String property)
+	{
+		try
+		{
+			File f = new File(path);
+			String d = IO.readAll(f);
+			
+			for(String i : d.split("\\Q\n\\E"))
+			{
+				if(i.startsWith(property + "="))
+				{
+					return i.split("\\Q=\\E")[1];
+				}
+			}
+		}
+
+		catch(IOException e)
+		{
+			e.printStackTrace();
+		}
+		
+		return "";
 	}
 
 	public void archive(String folder, String destination)
